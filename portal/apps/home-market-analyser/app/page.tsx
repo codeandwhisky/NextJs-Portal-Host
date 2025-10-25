@@ -1,4 +1,4 @@
-import { ShellContainer } from "@shellapp/ui/shell-container";
+import { ShellContainer } from "@shellapp/ui";
 
 export default function Home() {
   return (

@@ -88,10 +88,26 @@ apps/
 
 # Local Environment
 
+### Activate pnpm via corepack (recommended) and install:
+
+```
+corepack enable
+corepack prepare pnpm@latest --activate
+pnpm install
+```
+
+### Start the dev server:
+```
+pnpm dev
+```
+
+
 To run the applications parallelly
 
 ```
-npm run startp
+
+pnpm install
+pnpm run startp
 ```
 This will start all the apps and you can access in 
 - Shell `http://localhost:5001`
