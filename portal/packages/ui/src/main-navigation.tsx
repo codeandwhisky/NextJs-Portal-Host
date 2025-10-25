@@ -1,12 +1,6 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-// import MenuIcon from "@mui/icons-material/Menu";
 
-export const MainNavigation = () => {
+export const MainNavigation: React.FC = () => {
   const menus = [
     { name: "Home", path: "/shell" },
     { name: "Estimator", path: "/home-estimation" },
@@ -14,24 +8,45 @@ export const MainNavigation = () => {
   ];
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-        ></IconButton>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Shell
-        </Typography>
-        {menus.map((menu) => (
-          <Button key={menu.name} color="inherit" href={menu.path}>
-            {menu.name}
-          </Button>
-        ))}
-      </Toolbar>
-    </AppBar>
+    <header style={{ background: "#1976d2", color: "white" }}>
+      <nav style={{ display: "flex", alignItems: "center", padding: "8px 16px" }}>
+        <div style={{ marginRight: 12 }} aria-hidden>
+          {/* placeholder for menu icon */}
+          <button
+            aria-label="menu"
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "inherit",
+              cursor: "pointer",
+              padding: 8,
+              fontSize: 18,
+            }}
+          >
+            ☰
+          </button>
+        </div>
+
+        <div style={{ fontWeight: 600, fontSize: 18, flex: 1 }}>Shell</div>
+
+        <div style={{ display: "flex", gap: 8 }}>
+          {menus.map((menu) => (
+            <a
+              key={menu.name}
+              href={menu.path}
+              style={{
+                color: "inherit",
+                textDecoration: "none",
+                padding: "6px 10px",
+                borderRadius: 4,
+                background: "transparent",
+              }}
+            >
+              {menu.name}
+            </a>
+          ))}
+        </div>
+      </nav>
+    </header>
   );
 };

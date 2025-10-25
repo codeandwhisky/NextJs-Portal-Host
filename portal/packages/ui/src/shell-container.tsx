@@ -1,5 +1,3 @@
-import Box from "@mui/material/Box";
-import { Container, Typography } from "@mui/material";
 import { MainNavigation } from "./main-navigation";
 
 interface ShellContainerProps {
@@ -12,19 +10,16 @@ export const ShellContainer = (props: ShellContainerProps) => {
   const { children, title, subtitle } = props;
 
   return (
-    <Container maxWidth={false} style={{padding: 0}}>
-      <Box sx={{ flexGrow: 1 }}>
+    <div style={{ padding: 0, width: "100%" }}>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <MainNavigation />
-        <Typography variant="h4" marginY={2}>
-          {title}
-        </Typography>
 
-        <Typography variant="subtitle1">
-          {subtitle}
-        </Typography>
-
-        {children}
-      </Box>
-    </Container>
+        <div style={{ padding: "16px" }}>
+          <h1 style={{ margin: "8px 0", fontSize: "1.5rem" }}>{title}</h1>
+          <p style={{ margin: "4px 0 16px 0", color: "#555" }}>{subtitle}</p>
+          {children}
+        </div>
+      </div>
+    </div>
   );
 };
