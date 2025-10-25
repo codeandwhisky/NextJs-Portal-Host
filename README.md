@@ -1,60 +1,96 @@
 # NextJs-portal
+## Local development (no Docker)
 
-# Approaches
+This repo supports two simple local workflows so you can develop and test all apps without Docker or nginx.
 
-## Monorepo(Single Application)
+1) Start all apps in parallel (recommended)
 
-- All apps live under one roof
-- Each app is created under `apps\` folder
-- Consistent UI Components, leveraging shared components from `packages\ui`
+```bash
+# from the repo root (portal/)
+corepack enable
+corepack prepare pnpm@latest --activate
+pnpm install
 
+# start all apps in parallel (uses each app's dev script)
+pnpm run dev:all
 ```
-/portal (Root Application, that holds all independent apps, shared components and libraries)
-/portal/apps/home-estimation (Individual Application)
-/portal/apps/home-market-analyser (Individual Application)
+
+Each app will print its local URL and port (e.g. `http://localhost:5002`). During development the `basePath` is disabled for convenience (see note below), so you can open apps directly by port:
+
+- Shell: http://localhost:5001/
+- Home Estimation: http://localhost:5002/
+- Home Market Analyser: http://localhost:5003/
+
+2) Single host paths using a local proxy (optional)
+
+If you prefer to use a single host path (like `/home-estimation`) without Docker/nginx, run the lightweight local proxy included in the repo.
+
+```bash
+# start the proxy (from portal/)
+pnpm run proxy
+# proxy listens on http://localhost:8080
+
+# then open:
+http://localhost:8080/shell/
+http://localhost:8080/home-estimation/
+http://localhost:8080/home-market-analyser/
 ```
 
-## Shell (MFE)
-- Each app is independent
-- Apps are hosted remotely
-- Ex: app1: http://:5001, app2: http://:5002
+The proxy is implemented in `local-proxy.js` and uses `express` + `http-proxy-middleware` to forward requests to each app's dev server.
 
+3) Run apps individually
 
-## Approach
+Open separate terminals and inside each app run:
 
-Use a reverse proxy for a modular, iframe-free, loosely coupled Next.js monorepo, especially for portals where:
+```bash
+# in portal/apps/home-estimation
+pnpm dev
 
-- Teams own independent applications (home-estimation, analyser, accounts, loans)
-- Apps can scale and deploy independently
-- Unified UX can still be achieved via shared design system
-- Each app lives in its own folder and gets its own subdomain or route path to run the app.
-- Using reverse proxy, routing can be achieved.
+# in portal/apps/home-market-analyser
+pnpm dev
 
-`nginx.conf`
+# in portal/apps/shell
+pnpm dev
 ```
-server {
-  listen 80;
-  server_name myportalapp.com;
 
-  location / {
-    proxy_pass http://localhost:5001; # portal app
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-  }
+Dev-specific basePath note
+-------------------------
+To make development easier you’ll notice the apps are configured so `basePath` is only applied in production. That means in dev you can open the app at the port root (e.g. `http://localhost:5002/`). In production we keep `basePath` so apps work correctly behind nginx or any reverse proxy.
 
-  location /home-estimation/ {
-    rewrite ^/home-estimation(/.*)$ $1 break;
-    proxy_pass http://localhost:5002; # home-estimation app
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-  }
+If you prefer to always use the basePath in dev, change `apps/*/next.config.ts` and set `basePath` to the desired path.
 
-  location /home-market-analyser/ {
-    rewrite ^/home-market-analyser(/.*)$ $1 break;
-    proxy_pass http://localhost:5003; # home-market-analyser app
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-  }
+Proxy vs Docker/nginx
+---------------------
+- The `local-proxy.js` is a development convenience and does the same path-based routing as the `nginx/default.conf` used by the Docker compose setup.
+- If you want the full Docker setup (nginx gateway + apps), run:
+
+```bash
+docker compose up --build
+```
+
+Troubleshooting
+---------------
+- If a page returns Next's `/_not-found/page` or a 404, you likely requested the wrong path (missing basePath). Use the port + basePath or the proxy paths above.
+- If ports are already in use, change the port in the app or free the port. Check running processes with `lsof -i :5002` (macOS).
+- If TypeScript/IDE complains about `@shellapp/ui`, restart the TS server in your editor after running `pnpm install`. A minimal declaration file exists in `packages/ui/src/index.d.ts` to help the editor before installation.
+
+Useful scripts
+--------------
+- `pnpm run dev:all` — run dev for all apps in parallel from the repo root.
+- `pnpm run proxy` — start the local proxy at http://localhost:8080.
+- `pnpm run startp` — (alias) run turbo to start apps in parallel (legacy from repo). Note: `dev:all` uses pnpm workspace runner directly.
+
+If you'd like, I can add a single start script that launches the proxy and the dev servers together using `concurrently` or `tmux`.
+
+### To add `@shellapp/ui` package into child apps
+```
+pnpm add @shellapp/ui --filter ./apps/shell
+```
+
+### To add a package inside packages/ui
+```
+pnpm add lodash --filter ./packages/ui
+```
 }
 ```
 
