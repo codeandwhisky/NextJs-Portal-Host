@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PORTS=(5001 5002 5003)
+PORTS=(8080 5001 5002 5003)
 
 for port in "${PORTS[@]}"; do
   echo "Checking port $port..."
