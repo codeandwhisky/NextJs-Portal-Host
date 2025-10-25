@@ -25,6 +25,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Reset browser default margin (prevents 8px gap around viewport) */
+body {
+  margin: 0;
+}
+
 .test-class {
   @apply text-orange-500;
 }
