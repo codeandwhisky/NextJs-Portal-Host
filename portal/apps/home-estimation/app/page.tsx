@@ -1,8 +1,9 @@
+import { ShellContainer } from "@shellapp/ui";
 
 export default function Home() {
   return (
-    <div>
-      <h1>Home Estimation</h1>
-    </div>
+    <ShellContainer title="Home Estimation" subtitle="Estimate of your Home">
+      
+    </ShellContainer>
   );
 }

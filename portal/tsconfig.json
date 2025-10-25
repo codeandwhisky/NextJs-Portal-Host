@@ -1,0 +1,11 @@
+{
+  "extends": "./packages/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@shellapp/ui": ["packages/ui/src"],
+      "@shellapp/ui/*": ["packages/ui/src/*"]
+    }
+  },
+  "include": ["apps/**/*", "packages/**/*"]
+}
