@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 
 export const MainNavigation = () => {
   const menus = [
-    { name: "Home", path: "/" },
+    { name: "Home", path: "/shell" },
     { name: "Estimator", path: "/home-estimation" },
     { name: "Analyser", path: "/home-market-analyser" },
   ];
