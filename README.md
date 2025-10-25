@@ -178,3 +178,15 @@ pnpm add @shellapp/ui --filter ./apps/shell
 ```
 pnpm add lodash --filter ./packages/ui
 ```
+
+
+
+
+## Some commands
+
+```
+pnpm install
+pnpm -w prune
+rm -rf portal/apps/*/.next
+pnpm -w -r run build
+```
